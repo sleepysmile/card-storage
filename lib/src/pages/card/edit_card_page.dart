@@ -23,6 +23,7 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
 
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _cardNumberController = TextEditingController();
   final _barcodeController = TextEditingController();
 
   late final Future<StorageCardDto?> _cardFuture;
@@ -46,6 +47,7 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
     if (card != null) {
       _cardId = card.id;
       _nameController.text = card.name;
+      _cardNumberController.text = card.cardNumber ?? '';
       _barcodeController.text = card.barcode;
     }
 
@@ -55,6 +57,7 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
   @override
   void dispose() {
     _nameController.dispose();
+    _cardNumberController.dispose();
     _barcodeController.dispose();
     super.dispose();
   }
@@ -98,6 +101,7 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
           id: _cardId,
           name: _nameController.text.trim(),
           barcode: nextBarcode,
+          cardNumber: _cardNumberController.text.trim(),
         ),
       );
 
@@ -236,6 +240,14 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
 
                         return null;
                       },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _cardNumberController,
+                      textInputAction: TextInputAction.next,
+                      decoration: const InputDecoration(
+                        labelText: 'Номер карты',
+                      ),
                     ),
                     const SizedBox(height: 16),
                     TextFormField(

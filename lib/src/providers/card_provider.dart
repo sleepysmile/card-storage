@@ -1,9 +1,21 @@
+import 'package:card_storage/src/database/app_database.dart';
 import 'package:card_storage/src/dto/storage_card_dto.dart';
+import 'package:card_storage/src/repositories/card_cache_store.dart';
 import 'package:card_storage/src/repositories/card_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final appDatabaseProvider = Provider<AppDatabase>((ref) {
+  final db = AppDatabase();
+  ref.onDispose(db.close);
+  return db;
+});
+
 final cardRepositoryProvider = Provider<CardRepository>((ref) {
-  return HiveCardRepository();
+  return DriftCardRepository(ref.watch(appDatabaseProvider));
+});
+
+final cardListCacheStoreProvider = Provider<CardListCacheStore>((ref) {
+  return CardListCacheStore();
 });
 
 class CardSearchQueryNotifier extends Notifier<String> {
@@ -52,9 +64,17 @@ class CardListNotifier extends AsyncNotifier<CardListState> {
   static const _pageSize = 20;
 
   @override
-  Future<CardListState> build() {
-    ref.watch(cardSearchQueryProvider);
-    return _loadPage();
+  Future<CardListState> build() async {
+    final searchQuery = ref.watch(cardSearchQueryProvider);
+
+    if (searchQuery.isEmpty) {
+      final cached = await ref.read(cardListCacheStoreProvider).load();
+      if (cached != null) {
+        return CardListState(cards: cached.cards, hasMore: cached.hasMore);
+      }
+    }
+
+    return _fetchPage();
   }
 
   Future<void> loadMore() async {
@@ -71,20 +91,25 @@ class CardListNotifier extends AsyncNotifier<CardListState> {
     state = AsyncData(currentState.copyWith(isLoadingMore: true));
 
     try {
-      state = AsyncData(
-        await _loadPage(existingCards: currentState.cards),
-      );
+      final nextPage = await _fetchNextPage(existingCards: currentState.cards);
+      state = AsyncData(nextPage);
+      await _persistIfNoSearch(nextPage);
     } catch (_) {
       state = AsyncData(currentState.copyWith(isLoadingMore: false));
     }
   }
 
   Future<void> refresh() async {
+    await ref.read(cardListCacheStoreProvider).invalidate();
     state = const AsyncLoading();
-    state = await AsyncValue.guard(_loadPage);
+    state = await AsyncValue.guard(() async {
+      final result = await _fetchPage();
+      await _persistIfNoSearch(result);
+      return result;
+    });
   }
 
-  Future<CardListState> _loadPage({
+  Future<CardListState> _fetchPage({
     List<StorageCardDto> existingCards = const [],
   }) async {
     final repository = ref.read(cardRepositoryProvider);
@@ -99,6 +124,22 @@ class CardListNotifier extends AsyncNotifier<CardListState> {
       cards: [...existingCards, ...nextPage],
       hasMore: nextPage.length == _pageSize,
     );
+  }
+
+  Future<CardListState> _fetchNextPage({
+    required List<StorageCardDto> existingCards,
+  }) {
+    return _fetchPage(existingCards: existingCards);
+  }
+
+  Future<void> _persistIfNoSearch(CardListState listState) async {
+    if (ref.read(cardSearchQueryProvider).isNotEmpty) return;
+    await ref.read(cardListCacheStoreProvider).save(
+          CardListCacheEntry(
+            cards: listState.cards,
+            hasMore: listState.hasMore,
+          ),
+        );
   }
 }
 

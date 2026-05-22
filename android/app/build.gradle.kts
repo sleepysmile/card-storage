@@ -35,10 +35,24 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            isShrinkResources = true
+            isMinifyEnabled = true
         }
     }
 }
 
 flutter {
     source = "../.."
+}
+
+// Replace the bundled MLKit barcode library (which bakes ~5.8 MB of native
+// libs + tflite models into the APK) with the unbundled Play Services variant
+// that downloads the model on first use via Google Play Services.
+// Trade-off: requires GMS; the very first scan triggers a small background
+// download. Remove this block to restore the bundled (offline-capable) version.
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute(module("com.google.mlkit:barcode-scanning"))
+            .using(module("com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1"))
+    }
 }

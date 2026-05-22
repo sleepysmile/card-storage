@@ -3,14 +3,12 @@ import 'package:card_storage/src/dto/storage_card_dto.dart';
 import 'package:card_storage/src/providers/card_provider.dart';
 import 'package:card_storage/src/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class ViewCardPage extends ConsumerStatefulWidget {
-  const ViewCardPage({
-    super.key,
-    required this.barcode,
-  });
+  const ViewCardPage({super.key, required this.barcode});
 
   final String barcode;
 
@@ -30,6 +28,14 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
   Future<StorageCardDto?> _loadCard() async {
     final repository = ref.read(cardRepositoryProvider);
     return repository.getByBarcode(widget.barcode);
+  }
+
+  Future<void> _copyToClipboard(String value) async {
+    await Clipboard.setData(ClipboardData(text: value));
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Скопировано')));
   }
 
   Future<void> _openEditPage() async {
@@ -75,9 +81,7 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Просмотр карты'),
-      ),
+      appBar: AppBar(title: const Text('Просмотр карты')),
       body: FutureBuilder<StorageCardDto?>(
         future: _cardFuture,
         builder: (context, snapshot) {
@@ -108,30 +112,34 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
+              Material(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                child: InkWell(
+                  onTap: () => _copyToClipboard(card.barcode),
                   borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
-                child: BarcodeWidget(
-                  barcode: Barcode.code128(),
-                  data: card.barcode,
-                  drawText: true,
-                  height: 140,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleMedium?.copyWith(color: Colors.black),
-                  backgroundColor: Colors.white,
-                  color: Colors.black,
-                  errorBuilder: (context, error) {
-                    return Center(
-                      child: Text(
-                        'Не удалось построить barcode',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    );
-                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+                    child: BarcodeWidget(
+                      barcode: Barcode.code128(),
+                      data: card.barcode,
+                      drawText: true,
+                      height: 140,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleMedium?.copyWith(color: Colors.black),
+                      backgroundColor: Colors.white,
+                      color: Colors.black,
+                      errorBuilder: (context, error) {
+                        return Center(
+                          child: Text(
+                            'Не удалось построить barcode',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -145,16 +153,31 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
                         card.name,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Идентификатор',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        card.id.toString(),
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
+                      if (card.cardNumber?.isNotEmpty == true) ...[
+                        const SizedBox(height: 16),
+                        Text(
+                          'Номер карты',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 4),
+                        GestureDetector(
+                          onTap: () => _copyToClipboard(card.cardNumber!),
+                          child: Row(
+                            children: [
+                              Text(
+                                card.cardNumber!,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                              const SizedBox(width: 6),
+                              Icon(
+                                Icons.copy,
+                                size: 14,
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 16),
                       Text(
                         'Штрихкод',

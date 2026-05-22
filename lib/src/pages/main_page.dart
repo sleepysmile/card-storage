@@ -108,24 +108,16 @@ class _CardSearchFieldState extends ConsumerState<_CardSearchField> {
           filled: true,
           fillColor: Colors.transparent,
           contentPadding: EdgeInsets.zero,
-          border: const OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
-          errorBorder: const OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
+          border: const OutlineInputBorder(borderSide: BorderSide.none),
+          enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+          focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+          errorBorder: const OutlineInputBorder(borderSide: BorderSide.none),
           focusedErrorBorder: const OutlineInputBorder(
             borderSide: BorderSide.none,
           ),
           prefixIconConstraints: const BoxConstraints(
-            minWidth: 36,
-            minHeight: 36,
+            minWidth: 50,
+            minHeight: 50,
           ),
           prefixIcon: const Icon(Icons.search, color: darkIconColor),
           suffixIconConstraints: const BoxConstraints(

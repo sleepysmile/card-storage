@@ -3,7 +3,6 @@ import 'package:card_storage/src/pages/card/edit_card_page.dart';
 import 'package:card_storage/src/pages/card/list_card_page.dart';
 import 'package:card_storage/src/pages/card/scan_barcode_page.dart';
 import 'package:card_storage/src/pages/card/view_card_page.dart';
-import 'package:card_storage/src/pages/home/home_page.dart';
 import 'package:card_storage/src/pages/main_page.dart';
 import 'package:card_storage/src/pages/settings/settings_page.dart';
 import 'package:card_storage/src/routes/app_routes.dart';
@@ -40,7 +39,7 @@ GoRouter createAppRouter() {
           final barcode = state.uri.queryParameters['barcode'];
 
           if (barcode == null || barcode.isEmpty) {
-            return const NoTransitionPage(child: HomePage());
+            return const NoTransitionPage(child: ListCardPage());
           }
 
           return NoTransitionPage(
@@ -56,7 +55,7 @@ GoRouter createAppRouter() {
           final barcode = state.uri.queryParameters['barcode'];
 
           if (barcode == null || barcode.isEmpty) {
-            return const NoTransitionPage(child: HomePage());
+            return const NoTransitionPage(child: ListCardPage());
           }
 
           return NoTransitionPage(
@@ -82,7 +81,7 @@ GoRouter createAppRouter() {
           GoRoute(
             path: AppRoutes.home,
             pageBuilder: (context, state) =>
-                const NoTransitionPage(child: HomePage()),
+                const NoTransitionPage(child: ListCardPage()),
           ),
           GoRoute(
             path: AppRoutes.settings,

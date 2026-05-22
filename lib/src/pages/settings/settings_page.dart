@@ -20,21 +20,20 @@ class SettingsPage extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
           Card(
-            child: Column(
-              children: AppThemeMode.values.map((themeMode) {
-                return RadioListTile<AppThemeMode>(
-                  value: themeMode,
-                  groupValue: selectedThemeMode,
-                  title: Text(themeMode.title),
-                  onChanged: (value) {
-                    if (value == null) {
-                      return;
-                    }
-
-                    ref.read(themeModeProvider.notifier).setThemeMode(value);
-                  },
-                );
-              }).toList(growable: false),
+            child: RadioGroup<AppThemeMode>(
+              groupValue: selectedThemeMode,
+              onChanged: (value) {
+                if (value == null) return;
+                ref.read(themeModeProvider.notifier).setThemeMode(value);
+              },
+              child: Column(
+                children: AppThemeMode.values.map((themeMode) {
+                  return RadioListTile<AppThemeMode>(
+                    value: themeMode,
+                    title: Text(themeMode.title),
+                  );
+                }).toList(growable: false),
+              ),
             ),
           ),
         ],

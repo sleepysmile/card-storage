@@ -18,6 +18,7 @@ class _CreateCardPageState extends ConsumerState<CreateCardPage> {
 
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _cardNumberController = TextEditingController();
   final _barcodeController = TextEditingController();
 
   bool _isSaving = false;
@@ -25,6 +26,7 @@ class _CreateCardPageState extends ConsumerState<CreateCardPage> {
   @override
   void dispose() {
     _nameController.dispose();
+    _cardNumberController.dispose();
     _barcodeController.dispose();
     super.dispose();
   }
@@ -63,6 +65,7 @@ class _CreateCardPageState extends ConsumerState<CreateCardPage> {
           id: DateTime.now().microsecondsSinceEpoch,
           name: _nameController.text.trim(),
           barcode: _barcodeController.text.trim(),
+          cardNumber: _cardNumberController.text.trim(),
         ),
       );
       await ref.read(pagedCardListProvider.notifier).refresh();
@@ -118,6 +121,14 @@ class _CreateCardPageState extends ConsumerState<CreateCardPage> {
 
                     return null;
                   },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _cardNumberController,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(
+                    labelText: 'Номер карты',
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
