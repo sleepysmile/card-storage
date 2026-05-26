@@ -12,7 +12,7 @@ class StorageCardDto {
   final String? cardNumber;
 
   factory StorageCardDto.fromJson(Map<String, dynamic> json) => StorageCardDto(
-        id: json['id'] as int,
+        id: (json['id'] as int?) ?? DateTime.now().microsecondsSinceEpoch,
         name: json['name'] as String,
         barcode: json['barcode'] as String,
         cardNumber: json['cardNumber'] as String?,

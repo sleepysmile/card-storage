@@ -123,15 +123,10 @@ class _CardTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final titleStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
-      color: colorScheme.onPrimary,
-    );
-    final subtitleStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
-      color: colorScheme.onPrimary.withValues(alpha: 0.9),
-    );
-    final idStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
-      color: colorScheme.onPrimary.withValues(alpha: 0.75),
-    );
+    final firstLetter =
+        card.name.trimLeft().isNotEmpty
+            ? card.name.trimLeft()[0].toUpperCase()
+            : '?';
 
     return Material(
       color: colorScheme.primary,
@@ -143,39 +138,35 @@ class _CardTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Row(
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'ID: ${card.id}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: idStyle,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      card.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: titleStyle,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      card.barcode,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: subtitleStyle,
-                    ),
-                  ],
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: colorScheme.onPrimary.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  firstLetter,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-              const SizedBox(width: 12),
-              Icon(
-                Icons.chevron_right,
-                color: colorScheme.onPrimary,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  card.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: colorScheme.onPrimary,
+                  ),
+                ),
               ),
+              const SizedBox(width: 8),
+              Icon(Icons.chevron_right, color: colorScheme.onPrimary),
             ],
           ),
         ),

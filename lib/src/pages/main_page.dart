@@ -29,7 +29,7 @@ class MainPage extends StatelessWidget {
         title: isHomeRoute ? null : Text('$title - $currentTitle'),
         bottom: isHomeRoute
             ? const PreferredSize(
-                preferredSize: Size.fromHeight(56),
+                preferredSize: Size.fromHeight(60),
                 child: _CardSearchField(),
               )
             : null,
@@ -77,14 +77,13 @@ class _CardSearchFieldState extends ConsumerState<_CardSearchField> {
   @override
   Widget build(BuildContext context) {
     final searchQuery = ref.watch(cardSearchQueryProvider);
-    const darkIconColor = Color(0xDD000000);
     final colorScheme = Theme.of(context).colorScheme;
-    final hintStyle = Theme.of(
-      context,
-    ).textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant);
-    final textStyle = Theme.of(
-      context,
-    ).textTheme.bodyLarge?.copyWith(color: colorScheme.onSurface);
+    final hintStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
+      color: colorScheme.onSurface.withValues(alpha: 0.4),
+    );
+    final textStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
+      color: colorScheme.onSurface,
+    );
 
     if (_controller.text != searchQuery) {
       _controller.value = TextEditingValue(
@@ -93,48 +92,49 @@ class _CardSearchFieldState extends ConsumerState<_CardSearchField> {
       );
     }
 
-    return SizedBox(
-      width: double.infinity,
-      child: TextField(
-        controller: _controller,
-        onChanged: (value) {
-          ref.read(cardSearchQueryProvider.notifier).setQuery(value);
-        },
-        style: textStyle,
-        decoration: InputDecoration(
-          hintText: 'Поиск по названию карты',
-          hintStyle: hintStyle,
-          isDense: true,
-          filled: true,
-          fillColor: Colors.transparent,
-          contentPadding: EdgeInsets.zero,
-          border: const OutlineInputBorder(borderSide: BorderSide.none),
-          enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
-          focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
-          errorBorder: const OutlineInputBorder(borderSide: BorderSide.none),
-          focusedErrorBorder: const OutlineInputBorder(
-            borderSide: BorderSide.none,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TextField(
+          controller: _controller,
+          autofocus: false,
+          onChanged: (value) {
+            ref.read(cardSearchQueryProvider.notifier).setQuery(value);
+          },
+          style: textStyle,
+          decoration: InputDecoration(
+            hintText: 'Поиск по названию карты',
+            hintStyle: hintStyle,
+            isDense: true,
+            filled: true,
+            fillColor: Colors.transparent,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 16,
+            ),
+            border: const OutlineInputBorder(borderSide: BorderSide.none),
+            enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+            focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+            suffixIcon: searchQuery.isEmpty
+                ? null
+                : IconButton(
+                    onPressed: () {
+                      _controller.clear();
+                      ref.read(cardSearchQueryProvider.notifier).clear();
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
           ),
-          prefixIconConstraints: const BoxConstraints(
-            minWidth: 50,
-            minHeight: 50,
-          ),
-          prefixIcon: const Icon(Icons.search, color: darkIconColor),
-          suffixIconConstraints: const BoxConstraints(
-            minWidth: 36,
-            minHeight: 36,
-          ),
-          suffixIcon: searchQuery.isEmpty
-              ? null
-              : IconButton(
-                  onPressed: () {
-                    _controller.clear();
-                    ref.read(cardSearchQueryProvider.notifier).clear();
-                  },
-                  icon: const Icon(Icons.close, color: darkIconColor),
-                ),
         ),
-      ),
+        Divider(
+          height: 1,
+          thickness: 1,
+          color: colorScheme.onSurface.withValues(alpha: 0.12),
+        ),
+      ],
     );
   }
 }

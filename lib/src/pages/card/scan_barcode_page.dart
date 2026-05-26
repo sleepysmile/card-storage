@@ -72,7 +72,8 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
       if (mounted) {
         setState(() {
           _isInitializing = false;
-          _errorMessage = 'Сканирование поддерживается только на Android и iOS.';
+          _errorMessage =
+              'Сканирование поддерживается только на Android и iOS.';
         });
       }
       return;
@@ -240,9 +241,7 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Не удалось переключить вспышку.'),
-        ),
+        const SnackBar(content: Text('Не удалось переключить вспышку.')),
       );
     }
   }
@@ -408,9 +407,7 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
           ),
           IconButton(
             onPressed: _isInitializing ? null : _toggleFlash,
-            icon: Icon(
-              _isFlashOn ? Icons.flash_on : Icons.flash_off,
-            ),
+            icon: Icon(_isFlashOn ? Icons.flash_on : Icons.flash_off),
             tooltip: 'Переключить вспышку',
           ),
         ],
@@ -418,55 +415,50 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
       body: _isInitializing
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      _errorMessage!,
-                      textAlign: TextAlign.center,
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(_errorMessage!, textAlign: TextAlign.center),
+              ),
+            )
+          : controller == null || !controller.value.isInitialized
+          ? const Center(child: Text('Не удалось инициализировать камеру.'))
+          : Stack(
+              fit: StackFit.expand,
+              children: [
+                CameraPreview(controller),
+                IgnorePointer(
+                  child: Center(
+                    child: Container(
+                      width: 340,
+                      height: 230,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 3,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                   ),
-                )
-              : controller == null || !controller.value.isInitialized
-                  ? const Center(
-                      child: Text('Не удалось инициализировать камеру.'),
-                    )
-                  : Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        CameraPreview(controller),
-                        IgnorePointer(
-                          child: Center(
-                            child: Container(
-                              width: 260,
-                              height: 160,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  width: 3,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          left: 16,
-                          right: 16,
-                          bottom: 24,
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Text(
-                                'Наведите камеру на barcode карты или выберите изображение из галереи',
-                                style: Theme.of(context).textTheme.bodyLarge,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                ),
+                Positioned(
+                  left: 16,
+                  right: 16,
+                  bottom: 24,
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        'Наведите камеру на barcode карты или выберите изображение из галереи',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
+                  ),
+                ),
+              ],
+            ),
     );
   }
 }

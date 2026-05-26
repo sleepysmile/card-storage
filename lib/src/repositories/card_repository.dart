@@ -3,6 +3,8 @@ import 'package:card_storage/src/dto/storage_card_dto.dart';
 import 'package:drift/drift.dart';
 
 abstract class CardRepository {
+  Future<List<StorageCardDto>> getAll();
+
   Future<List<StorageCardDto>> getPage({
     required int offset,
     required int limit,
@@ -20,6 +22,13 @@ class DriftCardRepository implements CardRepository {
   DriftCardRepository(this._db);
 
   final AppDatabase _db;
+
+  @override
+  Future<List<StorageCardDto>> getAll() {
+    return (_db.select(_db.storageCards)
+          ..orderBy([(tbl) => OrderingTerm.desc(tbl.id)]))
+        .get();
+  }
 
   @override
   Future<List<StorageCardDto>> getPage({
