@@ -35,17 +35,29 @@ class DriftCardRepository implements CardRepository {
     required int offset,
     required int limit,
     String searchQuery = '',
-  }) {
+  }) async {
     final normalizedQuery = searchQuery.trim().toLowerCase();
-    final query = _db.select(_db.storageCards)
-      ..orderBy([(tbl) => OrderingTerm.desc(tbl.id)])
-      ..limit(limit, offset: offset);
 
-    if (normalizedQuery.isNotEmpty) {
-      query.where((tbl) => tbl.name.lower().like('%$normalizedQuery%'));
+    if (normalizedQuery.isEmpty) {
+      return (_db.select(_db.storageCards)
+            ..orderBy([(tbl) => OrderingTerm.desc(tbl.id)])
+            ..limit(limit, offset: offset))
+          .get();
     }
 
-    return query.get();
+    // SQLite lower() doesn't handle Cyrillic — filter in Dart instead.
+    final all = await (_db.select(_db.storageCards)
+          ..orderBy([(tbl) => OrderingTerm.desc(tbl.id)]))
+        .get();
+
+    final filtered =
+        all
+            .where((c) => c.name.toLowerCase().contains(normalizedQuery))
+            .toList();
+
+    final start = offset;
+    if (start >= filtered.length) return [];
+    return filtered.sublist(start, (offset + limit).clamp(0, filtered.length));
   }
 
   @override
