@@ -69,6 +69,7 @@ class _CardSearchField extends ConsumerStatefulWidget {
 
 class _CardSearchFieldState extends ConsumerState<_CardSearchField> {
   late final TextEditingController _controller;
+  late final FocusNode _focusNode;
 
   @override
   void initState() {
@@ -76,11 +77,13 @@ class _CardSearchFieldState extends ConsumerState<_CardSearchField> {
     _controller = TextEditingController(
       text: ref.read(cardSearchQueryProvider),
     );
+    _focusNode = FocusNode();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -108,6 +111,7 @@ class _CardSearchFieldState extends ConsumerState<_CardSearchField> {
       children: [
         TextField(
           controller: _controller,
+          focusNode: _focusNode,
           autofocus: false,
           onChanged: (value) {
             ref.read(cardSearchQueryProvider.notifier).setQuery(value);
@@ -132,6 +136,7 @@ class _CardSearchFieldState extends ConsumerState<_CardSearchField> {
                     onPressed: () {
                       _controller.clear();
                       ref.read(cardSearchQueryProvider.notifier).clear();
+                      _focusNode.unfocus();
                     },
                     icon: Icon(
                       Icons.close,
