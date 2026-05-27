@@ -1,3 +1,4 @@
+import 'package:card_storage/src/generated/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class ControlPanel extends StatelessWidget {
@@ -10,6 +11,8 @@ class ControlPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -46,17 +49,13 @@ class ControlPanel extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Column(
-                  children: const [
+                  children: [
                     Expanded(
-                      child: _ControlPanelPlaceholder(
-                        title: 'Свободная строка 1',
-                      ),
+                      child: _ControlPanelPlaceholder(title: l10n.freeLineOne),
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     Expanded(
-                      child: _ControlPanelPlaceholder(
-                        title: 'Свободная строка 2',
-                      ),
+                      child: _ControlPanelPlaceholder(title: l10n.freeLineTwo),
                     ),
                   ],
                 ),
@@ -70,9 +69,7 @@ class ControlPanel extends StatelessWidget {
 }
 
 class _ControlPanelPlaceholder extends StatelessWidget {
-  const _ControlPanelPlaceholder({
-    required this.title,
-  });
+  const _ControlPanelPlaceholder({required this.title});
 
   final String title;
 

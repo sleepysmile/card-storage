@@ -1,0 +1,126 @@
+{
+  "@@locale": "ru",
+
+  "appTitle": "Card Storage",
+
+  "navHome": "Главная",
+  "navSettings": "Настройки",
+
+  "createCardTitle": "Создание карты",
+  "editCardTitle": "Редактирование карты",
+  "viewCardTitle": "Просмотр карты",
+  "scanBarcodeTitle": "Сканирование barcode",
+  "cardListTitle": "Список карт",
+
+  "save": "Сохранить",
+  "saving": "Сохранение...",
+  "cancel": "Отмена",
+  "delete": "Удалить",
+
+  "cardNameLabel": "Название карты",
+  "cardNumberLabel": "Номер карты",
+  "barcodeLabel": "Штрихкод",
+
+  "cardNameRequired": "Введите название карты",
+  "barcodeRequired": "Введите штрихкод",
+  "barcodeTooShort": "Штрихкод должен содержать минимум {min} символов",
+  "@barcodeTooShort": {
+    "placeholders": {
+      "min": { "type": "int" }
+    }
+  },
+  "barcodeTooLong": "Штрихкод должен содержать не больше {max} символов",
+  "@barcodeTooLong": {
+    "placeholders": {
+      "max": { "type": "int" }
+    }
+  },
+  "barcodeAlreadyExists": "Карта с таким штрихкодом уже существует",
+
+  "scanBarcode": "Сканировать barcode",
+  "cardSaved": "Карта успешно сохранена",
+  "editCardAction": "Редактировать карту",
+  "deleteCard": "Удалить карту",
+  "deleteCardQuestion": "Удалить карту?",
+  "actionCannotBeUndone": "Это действие нельзя отменить.",
+  "cardNotFound": "Карта не найдена",
+  "backToCardList": "К списку карт",
+  "copied": "Скопировано",
+  "barcodeRenderError": "Не удалось построить barcode",
+
+  "searchByCardName": "Поиск по названию карты",
+  "loadCardsError": "Не удалось загрузить карты: {error}",
+  "@loadCardsError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "noCardsYet": "Карт пока нет",
+  "noCardsFound": "Карты не найдены",
+
+  "appearance": "Оформление",
+  "themeSystem": "Системная",
+  "themeLight": "Светлая",
+  "themeDark": "Тёмная",
+
+  "data": "Данные",
+  "exportCards": "Выгрузить карты",
+  "exportCardsSubtitle": "Сохранить все карты в JSON-файл",
+  "importCards": "Импортировать карты",
+  "importCardsSubtitle": "Загрузить карты из JSON-файла",
+  "noCardsToExport": "Нет карт для выгрузки",
+  "cardsExported": "Выгружено карт: {count}",
+  "@cardsExported": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "exportError": "Ошибка выгрузки: {error}",
+  "@exportError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "saveCardsDialogTitle": "Сохранить карты",
+  "selectCardsFile": "Выбрать файл карт",
+  "fileHasNoCards": "Файл не содержит карт",
+  "cardsImported": "Импортировано карт: {count}",
+  "@cardsImported": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "invalidFileFormat": "Неверный формат файла",
+  "importError": "Ошибка импорта: {error}",
+  "@importError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "language": "Язык",
+  "languageSystem": "Системный",
+
+  "scanFromGalleryTooltip": "Сканировать из галереи",
+  "toggleFlashTooltip": "Переключить вспышку",
+  "scanNotSupported": "Сканирование поддерживается только на Android и iOS.",
+  "noCameraFound": "Камера на устройстве не найдена.",
+  "scannerInitError": "Не удалось инициализировать сканер.",
+  "flashToggleError": "Не удалось переключить вспышку.",
+  "noBarcodeInImage": "На выбранном изображении barcode не найден.",
+  "readBarcodeFromImageError": "Не удалось считать barcode с изображения.",
+  "cameraAccessDenied": "Доступ к камере запрещён.",
+  "cameraAccessDeniedSettings": "Доступ к камере запрещён. Разрешите его в настройках устройства.",
+  "cameraAccessRestricted": "Доступ к камере ограничен на этом устройстве.",
+  "cameraOpenError": "Не удалось открыть камеру: {description}",
+  "@cameraOpenError": {
+    "placeholders": {
+      "description": { "type": "String" }
+    }
+  },
+  "cameraInitError": "Не удалось инициализировать камеру.",
+  "scanInstruction": "Наведите камеру на barcode карты или выберите изображение из галереи",
+
+  "freeLineOne": "Свободная строка 1",
+  "freeLineTwo": "Свободная строка 2"
+}

@@ -1,0 +1,126 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Card Storage",
+
+  "navHome": "Home",
+  "navSettings": "Settings",
+
+  "createCardTitle": "Create Card",
+  "editCardTitle": "Edit Card",
+  "viewCardTitle": "View Card",
+  "scanBarcodeTitle": "Scan Barcode",
+  "cardListTitle": "Card List",
+
+  "save": "Save",
+  "saving": "Saving...",
+  "cancel": "Cancel",
+  "delete": "Delete",
+
+  "cardNameLabel": "Card Name",
+  "cardNumberLabel": "Card Number",
+  "barcodeLabel": "Barcode",
+
+  "cardNameRequired": "Enter card name",
+  "barcodeRequired": "Enter barcode",
+  "barcodeTooShort": "Barcode must be at least {min} characters",
+  "@barcodeTooShort": {
+    "placeholders": {
+      "min": { "type": "int" }
+    }
+  },
+  "barcodeTooLong": "Barcode must be no more than {max} characters",
+  "@barcodeTooLong": {
+    "placeholders": {
+      "max": { "type": "int" }
+    }
+  },
+  "barcodeAlreadyExists": "A card with this barcode already exists",
+
+  "scanBarcode": "Scan barcode",
+  "cardSaved": "Card saved successfully",
+  "editCardAction": "Edit Card",
+  "deleteCard": "Delete Card",
+  "deleteCardQuestion": "Delete card?",
+  "actionCannotBeUndone": "This action cannot be undone.",
+  "cardNotFound": "Card not found",
+  "backToCardList": "Back to card list",
+  "copied": "Copied",
+  "barcodeRenderError": "Failed to render barcode",
+
+  "searchByCardName": "Search by card name",
+  "loadCardsError": "Failed to load cards: {error}",
+  "@loadCardsError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "noCardsYet": "No cards yet",
+  "noCardsFound": "No cards found",
+
+  "appearance": "Appearance",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+
+  "data": "Data",
+  "exportCards": "Export Cards",
+  "exportCardsSubtitle": "Save all cards to a JSON file",
+  "importCards": "Import Cards",
+  "importCardsSubtitle": "Load cards from a JSON file",
+  "noCardsToExport": "No cards to export",
+  "cardsExported": "Cards exported: {count}",
+  "@cardsExported": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "exportError": "Export error: {error}",
+  "@exportError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "saveCardsDialogTitle": "Save Cards",
+  "selectCardsFile": "Select cards file",
+  "fileHasNoCards": "File contains no cards",
+  "cardsImported": "Cards imported: {count}",
+  "@cardsImported": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "invalidFileFormat": "Invalid file format",
+  "importError": "Import error: {error}",
+  "@importError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "language": "Language",
+  "languageSystem": "System",
+
+  "scanFromGalleryTooltip": "Scan from gallery",
+  "toggleFlashTooltip": "Toggle flash",
+  "scanNotSupported": "Scanning is supported on Android and iOS only.",
+  "noCameraFound": "No camera found on this device.",
+  "scannerInitError": "Failed to initialize scanner.",
+  "flashToggleError": "Failed to toggle flash.",
+  "noBarcodeInImage": "No barcode found in the selected image.",
+  "readBarcodeFromImageError": "Failed to read barcode from image.",
+  "cameraAccessDenied": "Camera access denied.",
+  "cameraAccessDeniedSettings": "Camera access denied. Allow it in device settings.",
+  "cameraAccessRestricted": "Camera access is restricted on this device.",
+  "cameraOpenError": "Failed to open camera: {description}",
+  "@cameraOpenError": {
+    "placeholders": {
+      "description": { "type": "String" }
+    }
+  },
+  "cameraInitError": "Failed to initialize camera.",
+  "scanInstruction": "Point the camera at the card barcode or select an image from the gallery",
+
+  "freeLineOne": "Free line 1",
+  "freeLineTwo": "Free line 2"
+}

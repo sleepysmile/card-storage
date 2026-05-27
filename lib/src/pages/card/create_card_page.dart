@@ -1,4 +1,5 @@
 import 'package:card_storage/src/dto/storage_card_dto.dart';
+import 'package:card_storage/src/generated/l10n/app_localizations.dart';
 import 'package:card_storage/src/providers/card_provider.dart';
 import 'package:card_storage/src/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,7 @@ class _CreateCardPageState extends ConsumerState<CreateCardPage> {
     });
 
     try {
+      final l10n = AppLocalizations.of(context)!;
       final cardRepository = ref.read(cardRepositoryProvider);
       final existingCard = await cardRepository.getByBarcode(
         _barcodeController.text.trim(),
@@ -53,9 +55,7 @@ class _CreateCardPageState extends ConsumerState<CreateCardPage> {
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Карта с таким штрихкодом уже существует'),
-          ),
+          SnackBar(content: Text(l10n.barcodeAlreadyExists)),
         );
         return;
       }
@@ -75,7 +75,7 @@ class _CreateCardPageState extends ConsumerState<CreateCardPage> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Карта успешно сохранена')),
+        SnackBar(content: Text(l10n.cardSaved)),
       );
       context.pop(true);
     } finally {
@@ -98,8 +98,10 @@ class _CreateCardPageState extends ConsumerState<CreateCardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Создание карты')),
+      appBar: AppBar(title: Text(l10n.createCardTitle)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -111,14 +113,11 @@ class _CreateCardPageState extends ConsumerState<CreateCardPage> {
                 TextFormField(
                   controller: _nameController,
                   textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
-                    labelText: 'Название карты',
-                  ),
+                  decoration: InputDecoration(labelText: l10n.cardNameLabel),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Введите название карты';
+                      return l10n.cardNameRequired;
                     }
-
                     return null;
                   },
                 ),
@@ -126,31 +125,27 @@ class _CreateCardPageState extends ConsumerState<CreateCardPage> {
                 TextFormField(
                   controller: _cardNumberController,
                   textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
-                    labelText: 'Номер карты',
-                  ),
+                  decoration: InputDecoration(labelText: l10n.cardNumberLabel),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _barcodeController,
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.done,
-                  decoration: const InputDecoration(
-                    labelText: 'Штрихкод',
-                  ),
+                  decoration: InputDecoration(labelText: l10n.barcodeLabel),
                   validator: (value) {
                     final barcode = value?.trim() ?? '';
 
                     if (barcode.isEmpty) {
-                      return 'Введите штрихкод';
+                      return l10n.barcodeRequired;
                     }
 
                     if (barcode.length < _minBarcodeLength) {
-                      return 'Штрихкод должен содержать минимум $_minBarcodeLength символов';
+                      return l10n.barcodeTooShort(_minBarcodeLength);
                     }
 
                     if (barcode.length > _maxBarcodeLength) {
-                      return 'Штрихкод должен содержать не больше $_maxBarcodeLength символов';
+                      return l10n.barcodeTooLong(_maxBarcodeLength);
                     }
 
                     return null;
@@ -165,12 +160,12 @@ class _CreateCardPageState extends ConsumerState<CreateCardPage> {
                 OutlinedButton.icon(
                   onPressed: _openScanBarcodePage,
                   icon: const Icon(Icons.qr_code_scanner),
-                  label: const Text('Сканировать barcode'),
+                  label: Text(l10n.scanBarcode),
                 ),
                 const SizedBox(height: 24),
                 FilledButton(
                   onPressed: _isSaving ? null : _saveCard,
-                  child: Text(_isSaving ? 'Сохранение...' : 'Сохранить'),
+                  child: Text(_isSaving ? l10n.saving : l10n.save),
                 ),
               ],
             ),

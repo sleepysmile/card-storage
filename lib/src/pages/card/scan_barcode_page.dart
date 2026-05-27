@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:card_storage/src/generated/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -70,10 +71,10 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
   Future<void> _initializeScanner() async {
     if (!_isSupportedPlatform) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         setState(() {
           _isInitializing = false;
-          _errorMessage =
-              'Сканирование поддерживается только на Android и iOS.';
+          _errorMessage = l10n.scanNotSupported;
         });
       }
       return;
@@ -82,9 +83,11 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
     try {
       final cameras = await availableCameras();
       if (cameras.isEmpty) {
+        if (!mounted) return;
+        final l10n = AppLocalizations.of(context)!;
         setState(() {
           _isInitializing = false;
-          _errorMessage = 'Камера на устройстве не найдена.';
+          _errorMessage = l10n.noCameraFound;
         });
         return;
       }
@@ -125,18 +128,20 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
         return;
       }
 
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
         _isInitializing = false;
-        _errorMessage = _cameraErrorMessage(error);
+        _errorMessage = _cameraErrorMessage(l10n, error);
       });
     } catch (_) {
       if (!mounted) {
         return;
       }
 
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
         _isInitializing = false;
-        _errorMessage = 'Не удалось инициализировать сканер.';
+        _errorMessage = l10n.scannerInitError;
       });
     }
   }
@@ -240,8 +245,9 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
         return;
       }
 
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Не удалось переключить вспышку.')),
+        SnackBar(content: Text(l10n.flashToggleError)),
       );
     }
   }
@@ -275,10 +281,9 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
       }
 
       if (barcodes.isEmpty) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('На выбранном изображении barcode не найден.'),
-          ),
+          SnackBar(content: Text(l10n.noBarcodeInImage)),
         );
         return;
       }
@@ -289,10 +294,9 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
         return;
       }
 
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Не удалось считать barcode с изображения.'),
-        ),
+        SnackBar(content: Text(l10n.readBarcodeFromImageError)),
       );
     } finally {
       _isPickingImage = false;
@@ -379,36 +383,37 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
     return InputImageRotationValue.fromRawValue(adjustedRotation);
   }
 
-  String _cameraErrorMessage(CameraException error) {
+  String _cameraErrorMessage(AppLocalizations l10n, CameraException error) {
     switch (error.code) {
       case 'CameraAccessDenied':
-        return 'Доступ к камере запрещён.';
+        return l10n.cameraAccessDenied;
       case 'CameraAccessDeniedWithoutPrompt':
-        return 'Доступ к камере запрещён. Разрешите его в настройках устройства.';
+        return l10n.cameraAccessDeniedSettings;
       case 'CameraAccessRestricted':
-        return 'Доступ к камере ограничен на этом устройстве.';
+        return l10n.cameraAccessRestricted;
       default:
-        return 'Не удалось открыть камеру: ${error.description ?? error.code}';
+        return l10n.cameraOpenError(error.description ?? error.code);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final controller = _cameraController;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Сканирование barcode'),
+        title: Text(l10n.scanBarcodeTitle),
         actions: [
           IconButton(
             onPressed: _isInitializing ? null : _scanFromGallery,
             icon: const Icon(Icons.photo_library_outlined),
-            tooltip: 'Сканировать из галереи',
+            tooltip: l10n.scanFromGalleryTooltip,
           ),
           IconButton(
             onPressed: _isInitializing ? null : _toggleFlash,
             icon: Icon(_isFlashOn ? Icons.flash_on : Icons.flash_off),
-            tooltip: 'Переключить вспышку',
+            tooltip: l10n.toggleFlashTooltip,
           ),
         ],
       ),
@@ -422,7 +427,7 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
               ),
             )
           : controller == null || !controller.value.isInitialized
-          ? const Center(child: Text('Не удалось инициализировать камеру.'))
+          ? Center(child: Text(l10n.cameraInitError))
           : Stack(
               fit: StackFit.expand,
               children: [
@@ -450,7 +455,7 @@ class _ScanBarcodePageState extends State<ScanBarcodePage>
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Text(
-                        'Наведите камеру на barcode карты или выберите изображение из галереи',
+                        l10n.scanInstruction,
                         style: Theme.of(context).textTheme.bodyLarge,
                         textAlign: TextAlign.center,
                       ),

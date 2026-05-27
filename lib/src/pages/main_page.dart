@@ -1,3 +1,4 @@
+import 'package:card_storage/src/generated/l10n/app_localizations.dart';
 import 'package:card_storage/src/providers/card_provider.dart';
 import 'package:card_storage/src/routes/app_routes.dart';
 import 'package:card_storage/src/widgets/app_bottom_bar.dart';
@@ -8,25 +9,34 @@ import 'package:go_router/go_router.dart';
 class MainPage extends StatelessWidget {
   const MainPage({
     super.key,
-    required this.title,
     required this.routeName,
     required this.child,
   });
 
-  final String title;
   final String routeName;
   final Widget child;
+
+  String _localizedTitle(BuildContext context, String routeName) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (routeName) {
+      case AppRoutes.settings:
+        return l10n.navSettings;
+      default:
+        return l10n.navHome;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final currentIndex = AppRoutes.indexFor(routeName);
-    final currentTitle = AppRoutes.titleFor(routeName);
     final isHomeRoute = routeName == AppRoutes.home;
 
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: isHomeRoute ? 0 : kToolbarHeight,
-        title: isHomeRoute ? null : Text('$title - $currentTitle'),
+        title: isHomeRoute
+            ? null
+            : Text(_localizedTitle(context, routeName)),
         bottom: isHomeRoute
             ? const PreferredSize(
                 preferredSize: Size.fromHeight(60),
@@ -76,6 +86,7 @@ class _CardSearchFieldState extends ConsumerState<_CardSearchField> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final searchQuery = ref.watch(cardSearchQueryProvider);
     final colorScheme = Theme.of(context).colorScheme;
     final hintStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -103,7 +114,7 @@ class _CardSearchFieldState extends ConsumerState<_CardSearchField> {
           },
           style: textStyle,
           decoration: InputDecoration(
-            hintText: 'Поиск по названию карты',
+            hintText: l10n.searchByCardName,
             hintStyle: hintStyle,
             isDense: true,
             filled: true,

@@ -37,28 +37,6 @@ class AppRoutes {
     return home;
   }
 
-  static String titleFor(String routeName) {
-    switch (routeName) {
-      case cardList:
-        return 'Список карт';
-      case cardCreate:
-        return 'Создание карты';
-      case cardScan:
-        return 'Сканирование barcode';
-      case cardView:
-        return 'Просмотр карты';
-      case settings:
-        return 'Настройки';
-      case home:
-      default:
-        if (routeName == cardEdit) {
-          return 'Редактирование карты';
-        }
-
-        return 'Главная';
-    }
-  }
-
   static int indexFor(String routeName) {
     switch (routeName) {
       case settings:

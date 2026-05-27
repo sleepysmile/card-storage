@@ -1,4 +1,5 @@
 import 'package:card_storage/src/dto/storage_card_dto.dart';
+import 'package:card_storage/src/generated/l10n/app_localizations.dart';
 import 'package:card_storage/src/providers/card_provider.dart';
 import 'package:card_storage/src/routes/app_routes.dart';
 import 'package:card_storage/src/widgets/control_panel.dart';
@@ -33,13 +34,15 @@ class ListCardPage extends StatelessWidget {
           Expanded(
             child: Consumer(
               builder: (context, ref, child) {
+                final l10n = AppLocalizations.of(context)!;
                 final cardsAsync = ref.watch(pagedCardListProvider);
                 final searchQuery = ref.watch(cardSearchQueryProvider);
 
                 return cardsAsync.when(
-                  loading: () => const Center(child: CircularProgressIndicator()),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                   error: (error, stackTrace) => Center(
-                    child: Text('Не удалось загрузить карты: $error'),
+                    child: Text(l10n.loadCardsError(error.toString())),
                   ),
                   data: (cardListState) {
                     if (cardListState.cards.isEmpty) {
@@ -55,8 +58,8 @@ class ListCardPage extends StatelessWidget {
                             const SizedBox(height: 12),
                             Text(
                               searchQuery.trim().isEmpty
-                                  ? 'Карт пока нет'
-                                  : 'Карты не найдены',
+                                  ? l10n.noCardsYet
+                                  : l10n.noCardsFound,
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ],

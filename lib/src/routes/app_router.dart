@@ -8,8 +8,6 @@ import 'package:card_storage/src/pages/settings/settings_page.dart';
 import 'package:card_storage/src/routes/app_routes.dart';
 import 'package:go_router/go_router.dart';
 
-const _appTitle = 'Card Storage';
-
 GoRouter createAppRouter() {
   return GoRouter(
     initialLocation: AppRoutes.home,
@@ -71,7 +69,6 @@ GoRouter createAppRouter() {
 
           return NoTransitionPage(
             child: MainPage(
-              title: _appTitle,
               routeName: routeName,
               child: child,
             ),

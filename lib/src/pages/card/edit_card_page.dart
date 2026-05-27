@@ -1,4 +1,5 @@
 import 'package:card_storage/src/dto/storage_card_dto.dart';
+import 'package:card_storage/src/generated/l10n/app_localizations.dart';
 import 'package:card_storage/src/providers/card_provider.dart';
 import 'package:card_storage/src/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class EditCardPage extends ConsumerStatefulWidget {
-  const EditCardPage({
-    super.key,
-    required this.barcode,
-  });
+  const EditCardPage({super.key, required this.barcode});
 
   final String barcode;
 
@@ -73,6 +71,7 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
     });
 
     try {
+      final l10n = AppLocalizations.of(context)!;
       final repository = ref.read(cardRepositoryProvider);
       final nextBarcode = _barcodeController.text.trim();
 
@@ -83,11 +82,9 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
             return;
           }
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Карта с таким штрихкодом уже существует'),
-            ),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.barcodeAlreadyExists)));
           return;
         }
       }
@@ -125,17 +122,18 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
     final approved = await showDialog<bool>(
       context: context,
       builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: const Text('Удалить карту?'),
-          content: const Text('Это действие нельзя отменить.'),
+          title: Text(l10n.deleteCardQuestion),
+          content: Text(l10n.actionCannotBeUndone),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Отмена'),
+              child: Text(l10n.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Удалить'),
+              child: Text(l10n.delete),
             ),
           ],
         );
@@ -180,19 +178,11 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isBusy = _isSaving || _isDeleting;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Редактирование карты'),
-        actions: [
-          IconButton(
-            onPressed: isBusy ? null : _deleteCard,
-            icon: const Icon(Icons.delete_outline),
-            tooltip: 'Удалить карту',
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text(l10n.editCardTitle)),
       body: FutureBuilder<StorageCardDto?>(
         future: _cardFuture,
         builder: (context, snapshot) {
@@ -207,11 +197,11 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Карта не найдена'),
+                    Text(l10n.cardNotFound),
                     const SizedBox(height: 16),
                     FilledButton(
                       onPressed: () => context.go(AppRoutes.home),
-                      child: const Text('К списку карт'),
+                      child: Text(l10n.backToCardList),
                     ),
                   ],
                 ),
@@ -230,14 +220,13 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
                     TextFormField(
                       controller: _nameController,
                       textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: 'Название карты',
+                      decoration: InputDecoration(
+                        labelText: l10n.cardNameLabel,
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Введите название карты';
+                          return l10n.cardNameRequired;
                         }
-
                         return null;
                       },
                     ),
@@ -245,8 +234,8 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
                     TextFormField(
                       controller: _cardNumberController,
                       textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: 'Номер карты',
+                      decoration: InputDecoration(
+                        labelText: l10n.cardNumberLabel,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -254,22 +243,20 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
                       controller: _barcodeController,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.done,
-                      decoration: const InputDecoration(
-                        labelText: 'Штрихкод',
-                      ),
+                      decoration: InputDecoration(labelText: l10n.barcodeLabel),
                       validator: (value) {
                         final barcode = value?.trim() ?? '';
 
                         if (barcode.isEmpty) {
-                          return 'Введите штрихкод';
+                          return l10n.barcodeRequired;
                         }
 
                         if (barcode.length < _minBarcodeLength) {
-                          return 'Штрихкод должен содержать минимум $_minBarcodeLength символов';
+                          return l10n.barcodeTooShort(_minBarcodeLength);
                         }
 
                         if (barcode.length > _maxBarcodeLength) {
-                          return 'Штрихкод должен содержать не больше $_maxBarcodeLength символов';
+                          return l10n.barcodeTooLong(_maxBarcodeLength);
                         }
 
                         return null;
@@ -284,12 +271,12 @@ class _EditCardPageState extends ConsumerState<EditCardPage> {
                     OutlinedButton.icon(
                       onPressed: isBusy ? null : _openScanBarcodePage,
                       icon: const Icon(Icons.qr_code_scanner),
-                      label: const Text('Сканировать barcode'),
+                      label: Text(l10n.scanBarcode),
                     ),
                     const SizedBox(height: 24),
                     FilledButton(
                       onPressed: isBusy ? null : _saveCard,
-                      child: Text(isBusy ? 'Сохранение...' : 'Сохранить'),
+                      child: Text(isBusy ? l10n.saving : l10n.save),
                     ),
                   ],
                 ),

@@ -8,17 +8,6 @@ enum AppThemeMode {
 }
 
 extension AppThemeModeX on AppThemeMode {
-  String get title {
-    switch (this) {
-      case AppThemeMode.system:
-        return 'Системная';
-      case AppThemeMode.light:
-        return 'Светлая';
-      case AppThemeMode.dark:
-        return 'Тёмная';
-    }
-  }
-
   ThemeMode get themeMode {
     switch (this) {
       case AppThemeMode.system:

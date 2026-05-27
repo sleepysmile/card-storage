@@ -1,5 +1,6 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:card_storage/src/dto/storage_card_dto.dart';
+import 'package:card_storage/src/generated/l10n/app_localizations.dart';
 import 'package:card_storage/src/providers/card_provider.dart';
 import 'package:card_storage/src/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -33,9 +34,10 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
   Future<void> _copyToClipboard(String value) async {
     await Clipboard.setData(ClipboardData(text: value));
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Скопировано')));
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.copied)),
+    );
   }
 
   Future<void> _openEditPage() async {
@@ -46,17 +48,18 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
     final approved = await showDialog<bool>(
       context: context,
       builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: const Text('Удалить карту?'),
-          content: const Text('Это действие нельзя отменить.'),
+          title: Text(l10n.deleteCardQuestion),
+          content: Text(l10n.actionCannotBeUndone),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Отмена'),
+              child: Text(l10n.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Удалить'),
+              child: Text(l10n.delete),
             ),
           ],
         );
@@ -80,8 +83,10 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Просмотр карты')),
+      appBar: AppBar(title: Text(l10n.viewCardTitle)),
       body: FutureBuilder<StorageCardDto?>(
         future: _cardFuture,
         builder: (context, snapshot) {
@@ -97,11 +102,11 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Карта не найдена'),
+                    Text(l10n.cardNotFound),
                     const SizedBox(height: 16),
                     FilledButton(
                       onPressed: () => context.go(AppRoutes.home),
-                      child: const Text('К списку карт'),
+                      child: Text(l10n.backToCardList),
                     ),
                   ],
                 ),
@@ -133,7 +138,7 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
                       errorBuilder: (context, error) {
                         return Center(
                           child: Text(
-                            'Не удалось построить barcode',
+                            l10n.barcodeRenderError,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         );
@@ -156,7 +161,7 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
                       if (card.cardNumber?.isNotEmpty == true) ...[
                         const SizedBox(height: 16),
                         Text(
-                          'Номер карты',
+                          l10n.cardNumberLabel,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 4),
@@ -180,7 +185,7 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
                       ],
                       const SizedBox(height: 16),
                       Text(
-                        'Штрихкод',
+                        l10n.barcodeLabel,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 4),
@@ -198,7 +203,7 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
                   children: [
                     ListTile(
                       leading: const Icon(Icons.edit_outlined),
-                      title: const Text('Редактировать карту'),
+                      title: Text(l10n.editCardAction),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: _openEditPage,
                     ),
@@ -209,7 +214,7 @@ class _ViewCardPageState extends ConsumerState<ViewCardPage> {
                         color: Theme.of(context).colorScheme.error,
                       ),
                       title: Text(
-                        'Удалить карту',
+                        l10n.deleteCard,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.error,
                         ),
